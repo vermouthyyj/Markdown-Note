@@ -1906,18 +1906,52 @@ function App() {
         setCurrentNoteId(newNote.id);
     }
 
+    /**
+     * When the user edits a note, reposition
+     * it in the list of notes to the top of the list
+     */
     function updateNote(text) {
         setNotes(function (oldNotes) {
-            return oldNotes.map(function (oldNote) {
-                return oldNote.id === currentNoteId ? (0, _extends3.default)({}, oldNote, { body: text }) : oldNote;
-            });
+            // Create an empty note
+            var tempNotes = [];
+            // Loop over the original array
+            for (var i = 0; i < oldNotes.length; i++) {
+                // if the id matches
+                if (oldNotes[i].id === currentNoteId) {
+                    // put the udpated note at the beginning of the new array
+                    tempNotes.unshift((0, _extends3.default)({}, oldNotes[i], { body: text }));
+                }
+                // else
+                else {
+                        // push the old note to the end of the new array
+                        tempNotes.push(oldNotes[i]);
+                    }
+            }
+            return tempNotes;
         });
+        // This does not rearrange the Notes
+        // setNotes(oldNotes => oldNotes.map(oldNote => {
+        //     return oldNote.id === currentNoteId
+        //         ? { ...oldNote, body: text }
+        //         : oldNote
+        // }))
     }
 
     function findCurrentNote() {
         return notes.find(function (note) {
             return note.id === currentNoteId;
         }) || notes[0];
+    }
+
+    function deleteNote(event, noteId) {
+        event.stopPropagation();
+        // console.log(event, noteId)
+        // update note array
+        setNotes(function (prevNotes) {
+            return prevNotes.filter(function (note) {
+                return note.id !== noteId;
+            });
+        });
     }
 
     return _react2.default.createElement(
@@ -1934,7 +1968,8 @@ function App() {
                 notes: notes,
                 currentNote: findCurrentNote(),
                 setCurrentNoteId: setCurrentNoteId,
-                newNote: createNewNote
+                newNote: createNewNote,
+                deleteNote: deleteNote
             }),
             currentNoteId && notes.length > 0 && _react2.default.createElement(_Editor2.default, {
                 currentNote: findCurrentNote(),
@@ -2122,6 +2157,17 @@ function Sidebar(props) {
                     "h4",
                     { className: "text-snippet" },
                     note.body.split("\n")[0]
+                ),
+                _react2.default.createElement(
+                    "button",
+                    {
+                        className: "delete-btn"
+                        // Your onClick event handler here
+                        , onClick: function onClick(event) {
+                            return props.deleteNote(event, note.id);
+                        }
+                    },
+                    _react2.default.createElement("i", { className: "gg-trash trash-icon" })
                 )
             )
         );
