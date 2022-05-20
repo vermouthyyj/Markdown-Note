@@ -1,32 +1,27 @@
-# title(){return this.options.title||this.options.name}
-
-Quick start:
-
-```
-$ yarn # npm install
-$ yarn build # npm run build
-````
-
-## Development
-
-Run Webpack in watch-mode to continually compile the JavaScript as you work:
-
-```
-$ yarn watch # npm run watch
-```
-
-## Supporting Scrimba
-
-Since 2017, we have created over 20 free courses on Scrimba, and we're going to
-continue launching free courses. But to pay our bills, we have to charge once
-in a while. So if you've ever wanted to "give back" to Scrimba, you can do that by buying
-	one of our paid courses
-
-- [Become a professional React developer](https://scrimba.com/course/greact)
-- [The Responsive Web Design Bootcamp](https://scrimba.com/course/gresponsive)
-- [The Ultimate JavaScript Bootcamp](https://scrimba.com/course/gjavascript)
-
-	It would also mean the world to us if you share the courses.  
-
-Happy Coding!
 # Markdown-Note
+
+Click here to access the _[Markdown Note](https://vermouthyyj.github.io/Markdown-Note/)_.
+
+App Component Structure
+notes: lazily initialized the notes state
+
+![avatar](/img/struct.png)
+Key Features
+
+1. Keep Notes even though refresh the webpage (sync notes with localStorage)
+2. Show note titles in the sidebar (Add note summary titles)
+3. Keep the most recent modified note at the top of the sidebar (Move modified notes to the top of the list)
+4. Delete notes
+
+Methods
+
+1.  Lazily initialize our `notes` state so it doesn't reach into localStorage on every single re-render of the App component
+    `const [notes, setNotes] = React.useState(() => JSON.parse(localStorage.getItem("notes")) || [])`
+2.  display only the first line of note.body as the note summary in the sidebar.
+    - note.body has "invisible" newline characters
+      in the text every time there's a new line shown. E.g.
+      the text in Note 1 is:
+      "# Note summary\n\nBeginning of the note"
+    - See if you can split the string into an array
+      using the "\n" newline character as the divider
+3.  When the user edits a note, reposition it in the list of notes to the top of the list
